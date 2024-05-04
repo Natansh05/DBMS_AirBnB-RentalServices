@@ -16,7 +16,7 @@ CREATE TABLE Preferences(
 	Pref_ID BIGSERIAL NOT NULL,
 	User_ID char(10),
 	Pref_Aminities varchar(20),
-	Pref_Property_Type varchar(20),
+	Pref_Property_Type char(20),
 	Pref_Location varchar(20),
 	PRIMARY KEY(Pref_ID),
 	FOREIGN KEY(User_ID) REFERENCES Users(User_ID)
@@ -36,7 +36,7 @@ CREATE TABLE Host(
 
 CREATE TABLE Host_Languages(
 	Host_ID varchar(10) NOT NULL,
-	Languages_Spoken varchar(20)[],
+	Languages_Spoken varchar(50),
 	PRIMARY KEY(Host_ID,Languages_Spoken),
 	FOREIGN KEY(Host_ID) REFERENCES Host(Host_ID)
 		ON UPDATE CASCADE ON DELETE CASCADE
@@ -58,6 +58,7 @@ CREATE TABLE Property(
 	Availability_Status varchar(15),
 	No_of_rooms int,
 	No_of_beds int,
+	No_of_bedrooms int,
 	No_of_bathrooms int,
 	Accomodation_Limit int,
 	Check_in_time char(5),
@@ -80,11 +81,11 @@ CREATE TABLE Property(
 		ON DELETE set NULL ON UPDATE CASCADE
 );
 
-CREATE TABLE Property_Amenities(
-	Property_ID BIGINT NOT NULL,
-	Amenity_Name varchar(50),
-	PRIMARY KEY(Property_ID,Amenity_Name),
-	FOREIGN KEY(Property_ID) REFERENCES Property(Property_ID)
+CREATE TABLE Property_Aminities(
+	Host_ID varchar(10) NOT NULL,
+	Languages_Spoken varchar(20),
+	PRIMARY KEY(Host_ID,Languages_Spoken),
+	FOREIGN KEY(Host_ID) REFERENCES Host(Host_ID)
 		ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -92,7 +93,7 @@ CREATE TABLE Ratings(
 	User_ID char(10) NOT NULL,
 	Property_ID BIGSERIAL NOT NULL,
 	Rating Decimal(4,1),
-	Reviews varchar(200),
+	Riviews varchar(20),
 	PRIMARY KEY(User_ID,Property_ID),
 	FOREIGN KEY(User_ID) REFERENCES Users(User_ID)
 		ON UPDATE CASCADE ON DELETE CASCADE
@@ -122,7 +123,7 @@ CREATE TABLE Bookings(
 );
 
 CREATE TABLE Booking_Invoice(
-	Invoice_ID char(10) NOT NULL,
+	Invoice_ID char(5) NOT NULL,
 	Booking_ID char(10),
 	Transaction_ID char(10),
 	Payment_Status varchar(10),
@@ -134,8 +135,8 @@ CREATE TABLE Booking_Invoice(
 );
 
 CREATE TABLE Booking_Cancellation(
-	Cancellation_ID BIGSERIAL NOT NULL,
-	Invoice_ID char(10),
+	Cancellation_ID INT NOT NULL,
+	Invoice_ID char(5),
 	Refund_Amount Decimal(8,2),
 	Cancellation_Date Timestamp,
 	Cancellation_Reason varchar(100),
