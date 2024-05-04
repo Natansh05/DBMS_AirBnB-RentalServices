@@ -123,7 +123,7 @@ CREATE TABLE Bookings(
 );
 
 CREATE TABLE Booking_Invoice(
-	Invoice_ID char(5) NOT NULL,
+	Invoice_ID char(10) NOT NULL,
 	Booking_ID char(10),
 	Transaction_ID char(10),
 	Payment_Status varchar(10),
@@ -136,7 +136,7 @@ CREATE TABLE Booking_Invoice(
 
 CREATE TABLE Booking_Cancellation(
 	Cancellation_ID INT NOT NULL,
-	Invoice_ID char(5),
+	Invoice_ID char(10),
 	Refund_Amount Decimal(8,2),
 	Cancellation_Date Timestamp,
 	Cancellation_Reason varchar(100),
