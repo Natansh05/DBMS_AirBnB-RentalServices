@@ -1,0 +1,159 @@
+CREATE SCHEMA AIRBNB;
+SET Search_Path to airbnb;
+
+CREATE TABLE Users(
+	User_ID char(10) NOT NULL,
+	Phone_Number varchar(15),
+	Full_Name varchar(20),
+	Email varchar(30),
+	Password varchar(15),
+	Address varchar(150),
+	Government_ID varchar(20),
+	PRIMARY KEY(User_ID)
+);
+
+CREATE TABLE Preferences(
+	Pref_ID BIGSERIAL NOT NULL,
+	User_ID char(10),
+	Pref_Aminities varchar(20),
+	Pref_Property_Type varchar(20),
+	Pref_Location varchar(20),
+	PRIMARY KEY(Pref_ID),
+	FOREIGN KEY(User_ID) REFERENCES Users(User_ID)
+		ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Host(
+	Host_ID varchar(10) NOT NULL,
+	Name varchar(20),
+	PhoneNumber varchar(15),
+	Email varchar(30),
+	Avg_Rating Decimal(5,2),
+	Avg_Response_Time Decimal(6,2),
+	Super_Host_Status bool,
+	PRIMARY KEY(Host_ID)
+);
+
+CREATE TABLE Host_Languages(
+	Host_ID varchar(10) NOT NULL,
+	Languages_Spoken varchar(20)[],
+	PRIMARY KEY(Host_ID,Languages_Spoken),
+	FOREIGN KEY(Host_ID) REFERENCES Host(Host_ID)
+		ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE Property_Category(
+	Category_ID int NOT NULL,
+	Category_Name varchar(20),
+	PRIMARY KEY(Category_ID)
+);
+
+CREATE TABLE Property(
+	Property_ID BIGSERIAL NOT NULL,
+	Title varchar(20),
+	Avg_Rating Decimal(5,2),
+	Description varchar(100),
+	Category_ID int,
+	Price_Per_Night Decimal(8,2),
+	Availability_Status varchar(15),
+	No_of_rooms int,
+	No_of_beds int,
+	No_of_bathrooms int,
+	Accomodation_Limit int,
+	Check_in_time char(5),
+	Check_out_time char(5),
+	Pet_Permit bool,
+	Smoking_Permit bool,
+	Cancellation_Policy varchar(40),
+	Host_ID char(10),
+	Address varchar(150),
+	City varchar(20),
+	State varchar(20),
+	Country varchar(20),
+	Pincode int,
+	Latitude Decimal(10,6),
+	Longitude Decimal(10,6),
+	PRIMARY KEY(Property_ID),
+	FOREIGN KEY(Host_ID) REFERENCES Host(Host_ID)
+		ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY(Category_ID) REFERENCES Property_Category(Category_ID)
+		ON DELETE set NULL ON UPDATE CASCADE
+);
+
+CREATE TABLE Property_Amenities(
+	Property_ID BIGINT NOT NULL,
+	Amenity_Name varchar(50),
+	PRIMARY KEY(Property_ID,Amenity_Name),
+	FOREIGN KEY(Property_ID) REFERENCES Property(Property_ID)
+		ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE Ratings(
+	User_ID char(10) NOT NULL,
+	Property_ID BIGSERIAL NOT NULL,
+	Rating Decimal(4,1),
+	Reviews varchar(200),
+	PRIMARY KEY(User_ID,Property_ID),
+	FOREIGN KEY(User_ID) REFERENCES Users(User_ID)
+		ON UPDATE CASCADE ON DELETE CASCADE
+	
+);
+
+CREATE TABLE Wishlist(
+	User_ID char(10) NOT NULL,
+	Property_ID BIGSERIAL NOT NULL,	
+	PRIMARY KEY(User_ID,Property_ID),
+	FOREIGN KEY(User_ID) REFERENCES Users(User_ID)
+		ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE Bookings(
+	Booking_ID char(10) NOT NULL,
+	User_ID char(10),
+	Property_ID BIGSERIAL,
+	Booking_Date Timestamp,
+	CheckInDate Date,
+	CheckOutDate Date,
+	Is_Confirmed Bool,
+	PRIMARY KEY(Booking_ID),
+	FOREIGN KEY(User_ID) REFERENCES Users(User_ID),
+	FOREIGN KEY(Property_ID) REFERENCES Property(Property_ID)
+		ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE Booking_Invoice(
+	Invoice_ID char(10) NOT NULL,
+	Booking_ID char(10),
+	Transaction_ID char(10),
+	Payment_Status varchar(10),
+	PaymentDate Date,
+	Amount Decimal(8,2),
+	PRIMARY KEY(Invoice_ID),
+	FOREIGN KEY(Booking_ID) REFERENCES Bookings(Booking_ID)
+		ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE Booking_Cancellation(
+	Cancellation_ID BIGSERIAL NOT NULL,
+	Invoice_ID char(10),
+	Refund_Amount Decimal(8,2),
+	Cancellation_Date Timestamp,
+	Cancellation_Reason varchar(100),
+	Refund_Status varchar(10),
+	PRIMARY KEY(Cancellation_ID),
+	FOREIGN KEY(Invoice_ID) REFERENCES Booking_Invoice(Invoice_ID)
+		ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE Contract_Details(
+	Contract_ID SERIAL NOT NULL,
+	Property_ID BIGSERIAL NOT NULL,
+	Commision_Per_Booking Decimal(6,2),
+	Fixed_Monthly_Rent Decimal(8,2),
+	Commision_Ammount Decimal(8,2),
+	Start_Date Date,
+	End_Date Date,
+	PRIMARY KEY(Contract_ID,Property_ID),
+	FOREIGN KEY(Property_ID) REFERENCES Property(Property_ID)
+		ON UPDATE CASCADE ON DELETE CASCADE
+);
