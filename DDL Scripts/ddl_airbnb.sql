@@ -36,7 +36,7 @@ CREATE TABLE Host(
 
 CREATE TABLE Host_Languages(
 	Host_ID varchar(10) NOT NULL,
-	Languages_Spoken varchar(20),
+	Languages_Spoken varchar(50),
 	PRIMARY KEY(Host_ID,Languages_Spoken),
 	FOREIGN KEY(Host_ID) REFERENCES Host(Host_ID)
 		ON UPDATE CASCADE ON DELETE CASCADE
@@ -59,6 +59,7 @@ CREATE TABLE Property(
 	No_of_rooms int,
 	No_of_beds int,
 	No_of_bedrooms int,
+	No_of_bathrooms int,
 	Accomodation_Limit int,
 	Check_in_time char(5),
 	Check_out_time char(5),
