@@ -35,17 +35,12 @@ language plpgsql
 as $$
 
 begin
-	create temp view rating_propertywise as 
-	select property_id , r.rating
-	from ratings as r;
-	----------(1)
-	
 	
 	create temp view final11 as 
-	select property_id,avg(rating) as rat_avg
-	from rating_propertywise
-	group by property_id;
-	
+	select property_id,avg(rating) as rating_avg
+	from ratings
+	group by property_id
+	order by property_id asc
 	
 	update host
 	set avg_rating = (
