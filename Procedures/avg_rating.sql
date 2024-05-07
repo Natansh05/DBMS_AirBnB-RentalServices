@@ -29,3 +29,35 @@ begin
 end;
 $$;
 
+---------------------------------------------------------------------------------
+create or replace procedure rating1()
+language plpgsql
+as $$
+
+begin
+	create temp view rating_propertywise as 
+	select property_id , r.rating
+	from ratings as r;
+	----------(1)
+	
+	
+	create temp view final11 as 
+	select property_id,avg(rating) as rat_avg
+	from rating_propertywise
+	group by property_id;
+	
+	
+	update host
+	set avg_rating = (
+		select avg(rat_avg)
+		from (
+			select host_id,rat_avg from property natural join final11 order by host_id ASC
+		) as r1
+		where host.host_id = r1.host_id 
+	);
+	
+end;
+$$;
+
+
+CALL rating1();
