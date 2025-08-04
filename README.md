@@ -25,6 +25,7 @@ This project is a Database Management System (DBMS) designed to manage Airbnb re
 - [Natansh Shah](https://github.com/Natansh05)
 - [Abhimanyu Karia](https://github.com/Abhimanyukaria)
 - Vraj Gandhi
+- [Vaishvik Patel](https://github.com/Vaishvik79)
 
 ## License
 MIT License
